@@ -16,7 +16,11 @@
 #
 # print(result)
 
+#
+# price= 2000000.1987
+# formatted_price = f"The price is ${price:,.2f}"
+# print(formatted_price)
 
-price= 2000000.1987
-formatted_price = f"The price is ${price:,.2f}"
-print(formatted_price)
+age = 18
+message = f"You are {'eligible' if age >= 18 else 'not eligibile'} to vote."
+print(message)
