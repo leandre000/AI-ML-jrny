@@ -81,9 +81,11 @@
 #
 # #rstrip() → removes spaces from the RIGHT side
 # print(space_text.rstrip())  # "   Mugisha"
+x = ["apple", "banana"]
+y = ["apple", "banana"]
+z = x
 
-x, y = 5,3
-print(x / y)
-
-
+print(x is z)   # True
+print(x is y)   # False
+print(x == y)   # True
 
