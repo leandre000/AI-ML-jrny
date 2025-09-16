@@ -21,6 +21,11 @@
 # formatted_price = f"The price is ${price:,.2f}"
 # print(formatted_price)
 
-age = 18
-message = f"You are {'eligible' if age >= 18 else 'not eligibile'} to vote."
-print(message)
+#
+
+txt1 = "My name is {fname}, I'm {age}".format(fname ="John", age=36)
+txt2 = "My name is {0}, I'm {1}".format("John", 36)
+txt3 = "Muy name is {}, I'm {}".format("John",36)
+
+txt = "The universe is {:,} years old.".format(1380000000000)
+print(txt)
