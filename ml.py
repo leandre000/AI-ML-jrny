@@ -8,11 +8,15 @@
 #  return x * 0.3048
 #
 # txt = f"A plane can be flying at {my_converter(3000)} meter altitude"
-#
 # print(txt)
 
-num1 = 10
-num2 = 5
-result = f"The sum of {num1} and {num2} is {num1+num2}"
+# num1 = 10
+# num2 = 5
+# result = f"The sum of {num1} and {num2} is {num1+num2}"
+#
+# print(result)
 
-print(result)
+
+price= 2000000.1987
+formatted_price = f"The price is ${price:,.2f}"
+print(formatted_price)
