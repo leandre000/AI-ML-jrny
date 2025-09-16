@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Spring-Mass Dynamics Explorer</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: radial-gradient(
+          ellipse at center,
+          #1e3c72 0%,
+          #2a5298 50%,
+          #0f2027 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+        color: #333;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 25px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .header h1 {
+        font-size: 3rem;
+        font-weight: 100;
+        color: #2c3e50;
+        margin-bottom: 10px;
+        letter-spacing: -1px;
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        color: #7f8c8d;
+        font-weight: 300;
+      }
+
+      .main-layout {
+        display: grid;
+        grid-template-columns: 1fr 450px;
+        gap: 25px;
+        max-width: 1600px;
+        margin: 0 auto;
+      }
+
+      .left-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+
+      .right-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .card-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .card-title::before {
+        content: "";
+        width: 4px;
+        height: 20px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border-radius: 2px;
+      }
+
+      .parameters-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      .parameter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .parameter-label {
+        font-weight: 600;
+        color: #34495e;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .parameter-slider {
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        background: linear-gradient(90deg, #e0e0e0, #f0f0f0);
+        outline: none;
+        -webkit-appearance: none;
+        margin: 8px 0;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .parameter-slider::-webkit-slider-thumb {
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        transition: all 0.2s ease;
+      }
+
+      .parameter-slider::-webkit-slider-thumb:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+      }
+
+      .parameter-value {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 8px 12px;
+        border-radius: 12px;
+        text-align: center;
+        font-weight: 700;
+        color: #495057;
+        border: 1px solid #dee2e6;
+        font-size: 0.85rem;
+      }
+
+      .equation-display {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin: 20px 0;
+      }
+
+      .equation-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 8px 0;
+        font-size: 1rem;
+        font-weight: 500;
+      }
+
+      .equation-label {
+        opacity: 0.9;
+        font-weight: 600;
+      }
+
+      .graph-container {
+        position: relative;
+        height: 450px;
+      }
+
+      #combinedCanvas {
+        width: 100%;
+        height: 100%;
+        border-radius: 15px;
+        background: linear-gradient(135deg, #fafafa, #ffffff);
+        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      .graph-legend {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+
+      .simulation-area {
+        height: 400px;
+        background: linear-gradient(135deg, #f8f9fa, #ffffff);
+        border-radius: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        border: 2px solid rgba(102, 126, 234, 0.1);
+      }
+
+      #springCanvas {
+        background: transparent;
+        border-radius: 15px;
+      }
+
+      .controls-panel {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .control-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        min-width: 120px;
+      }
+
+      .control-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .control-btn.reset {
+        background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        box-shadow: 0 4px 15px rgba(149, 165, 166, 0.3);
+      }
+
+      .control-btn.reset:hover {
+        box-shadow: 0 6px 20px rgba(149, 165, 166, 0.4);
+      }
+
+      .insights-section {
+        background: linear-gradient(135deg, #fff9c4, #fff3a0);
+        border: 1px solid #f1c40f;
+        border-radius: 20px;
+        padding: 25px;
+        margin-top: 25px;
+        grid-column: 1 / -1;
+      }
+
+      .insights-title {
+        color: #d35400;
+        font-weight: 700;
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+      }
+
+      .insights-content {
+        color: #8b4513;
+        line-height: 1.7;
+        font-size: 1rem;
+      }
+
+      .status-display {
+        background: linear-gradient(135deg, #e8f5e8, #f0fff0);
+        border-radius: 15px;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-left: 4px solid #27ae60;
+      }
+
+      .status-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 5px 0;
+        font-size: 0.9rem;
+      }
+
+      .status-label {
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .status-value {
+        font-weight: 700;
+        color: #27ae60;
+      }
+
+      @media (max-width: 1200px) {
+        .main-layout {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .parameters-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .header h1 {
+          font-size: 2.5rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+
+        .header {
+          padding: 20px;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .card {
+          padding: 20px;
+        }
+
+        .controls-panel {
+          flex-direction: column;
+          gap: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-layout">
+      <div class="left-panel">
+        <div class="card">
+          <div class="card-title">Mathematical Foundation</div>
+          <div class="equation-display">
+            <div class="equation-row">
+              <span class="equation-label">Position:</span>
+              <span>x(t) = A cos(ωt + φ)</span>
+            </div>
+            <div class="equation-row">
+              <span class="equation-label">Velocity:</span>
+              <span>v(t) = -Aω sin(ωt + φ)</span>
+            </div>
+            <div class="equation-row">
+              <span class="equation-label">Acceleration:</span>
+              <span>a(t) = -Aω² cos(ωt + φ)</span>
+            </div>
+            <div class="equation-row">
+              <span class="equation-label">Spring Constant:</span>
+              <span>k = <span id="springConstant">4.0</span> N/m</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Motion Analysis Dashboard</div>
+          <div class="graph-container">
+            <canvas id="combinedCanvas"></canvas>
+          </div>
+          <div class="graph-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background: #3498db"></div>
+              <span>Position</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background: #e74c3c"></div>
+              <span>Velocity</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background: #f39c12"></div>
+              <span>Acceleration</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div class="card">
+          <div class="card-title">Live Simulation</div>
+          <div class="simulation-area">
+            <canvas id="springCanvas" width="350" height="380"></canvas>
+          </div>
+          <div class="controls-panel">
+            <button
+              class="control-btn"
+              id="playBtn"
+              onclick="toggleAnimation()"
+            >
+              Start Motion
+            </button>
+            <button class="control-btn reset" onclick="resetAnimation()">
+              Reset
+            </button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">System Parameters</div>
+
+          <div class="parameters-grid">
+            <div class="parameter-group">
+              <div class="parameter-label">Amplitude (A)</div>
+              <input
+                type="range"
+                class="parameter-slider"
+                id="amplitude"
+                min="0.1"
+                max="2"
+                step="0.1"
+                value="0.8"
+              />
+              <div class="parameter-value" id="amplitudeValue">0.8 m</div>
+            </div>
+
+            <div class="parameter-group">
+              <div class="parameter-label">Angular Frequency (ω)</div>
+              <input
+                type="range"
+                class="parameter-slider"
+                id="frequency"
+                min="0.5"
+                max="4"
+                step="0.1"
+                value="2"
+              />
+              <div class="parameter-value" id="frequencyValue">2.0 rad/s</div>
+            </div>
+
+            <div class="parameter-group">
+              <div class="parameter-label">Phase Angle (φ)</div>
+              <input
+                type="range"
+                class="parameter-slider"
+                id="phase"
+                min="0"
+                max="6.28"
+                step="0.1"
+                value="0"
+              />
+              <div class="parameter-value" id="phaseValue">0.0 rad</div>
+            </div>
+
+            <div class="parameter-group">
+              <div class="parameter-label">Mass (m)</div>
+              <input
+                type="range"
+                class="parameter-slider"
+                id="mass"
+                min="0.5"
+                max="5"
+                step="0.1"
+                value="1"
+              />
+              <div class="parameter-value" id="massValue">1.0 kg</div>
+            </div>
+          </div>
+
+          <div class="status-display">
+            <div class="status-row">
+              <span class="status-label">Period (T):</span>
+              <span class="status-value" id="periodValue">3.14 s</span>
+            </div>
+            <div class="status-row">
+              <span class="status-label">Frequency (f):</span>
+              <span class="status-value" id="freqValue">0.32 Hz</span>
+            </div>
+            <div class="status-row">
+              <span class="status-label">Max Speed:</span>
+              <span class="status-value" id="maxSpeedValue">1.6 m/s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let animationId;
+      let isAnimating = false;
+      let time = 0;
+
+      // Get canvas elements
+      const combinedCanvas = document.getElementById("combinedCanvas");
+      const springCanvas = document.getElementById("springCanvas");
+
+      const combinedCtx = combinedCanvas.getContext("2d");
+      const springCtx = springCanvas.getContext("2d");
+
+      // Set canvas dimensions
+      function resizeCanvas(canvas) {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * window.devicePixelRatio;
+        canvas.height = rect.height * window.devicePixelRatio;
+        canvas
+          .getContext("2d")
+          .scale(window.devicePixelRatio, window.devicePixelRatio);
+        canvas.style.width = rect.width + "px";
+        canvas.style.height = rect.height + "px";
+      }
+
+      resizeCanvas(combinedCanvas);
+
+      // Get control elements
+      const amplitudeSlider = document.getElementById("amplitude");
+      const frequencySlider = document.getElementById("frequency");
+      const phaseSlider = document.getElementById("phase");
+      const massSlider = document.getElementById("mass");
+
+      const amplitudeValue = document.getElementById("amplitudeValue");
+      const frequencyValue = document.getElementById("frequencyValue");
+      const phaseValue = document.getElementById("phaseValue");
+      const massValue = document.getElementById("massValue");
+      const springConstantSpan = document.getElementById("springConstant");
+
+      const periodValue = document.getElementById("periodValue");
+      const freqValue = document.getElementById("freqValue");
+      const maxSpeedValue = document.getElementById("maxSpeedValue");
+
+      // Update display values and calculate derived properties
+      function updateValues() {
+        const A = parseFloat(amplitudeSlider.value);
+        const omega = parseFloat(frequencySlider.value);
+        const phi = parseFloat(phaseSlider.value);
+        const m = parseFloat(massSlider.value);
+
+        amplitudeValue.textContent = `${A.toFixed(1)} m`;
+        frequencyValue.textContent = `${omega.toFixed(1)} rad/s`;
+        phaseValue.textContent = `${phi.toFixed(1)} rad`;
+        massValue.textContent = `${m.toFixed(1)} kg`;
+
+        // Calculate derived values
+        const k = m * omega * omega;
+        const T = (2 * Math.PI) / omega;
+        const f = 1 / T;
+        const maxSpeed = A * omega;
+
+        springConstantSpan.textContent = k.toFixed(1);
+        periodValue.textContent = `${T.toFixed(2)} s`;
+        freqValue.textContent = `${f.toFixed(2)} Hz`;
+        maxSpeedValue.textContent = `${maxSpeed.toFixed(1)} m/s`;
+      }
+
+      // Calculate SHM values
+      function calculateSHM(t) {
+        const A = parseFloat(amplitudeSlider.value);
+        const omega = parseFloat(frequencySlider.value);
+        const phi = parseFloat(phaseSlider.value);
+
+        const position = A * Math.cos(omega * t + phi);
+        const velocity = -A * omega * Math.sin(omega * t + phi);
+        const acceleration = -A * omega * omega * Math.cos(omega * t + phi);
+
+        return { position, velocity, acceleration };
+      }
+
+      // Enhanced graph drawing with better styling
+      function drawCombinedGraph() {
+        const canvas = combinedCanvas;
+        const ctx = combinedCtx;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const timeRange = 10;
+        const margin = 70;
+        const graphWidth = canvas.width - 2 * margin;
+        const graphHeight = canvas.height - 2 * margin;
+
+        // Calculate data points
+        const timePoints = [];
+        const positionPoints = [];
+        const velocityPoints = [];
+        const accelerationPoints = [];
+
+        for (let t = 0; t <= timeRange; t += 0.02) {
+          const shm = calculateSHM(t);
+          timePoints.push(t);
+          positionPoints.push(shm.position);
+          velocityPoints.push(shm.velocity);
+          accelerationPoints.push(shm.acceleration);
+        }
+
+        // Find max values for scaling
+        const maxPos = Math.max(...positionPoints.map(Math.abs));
+        const maxVel = Math.max(...velocityPoints.map(Math.abs));
+        const maxAcc = Math.max(...accelerationPoints.map(Math.abs));
+        const overallMax = Math.max(maxPos, maxVel, maxAcc) * 1.1;
+
+        // Draw enhanced grid
+        ctx.strokeStyle = "rgba(200, 200, 200, 0.3)";
+        ctx.lineWidth = 1;
+
+        // Vertical grid lines
+        for (let t = 0; t <= timeRange; t += 1) {
+          const x = margin + (t / timeRange) * graphWidth;
+          ctx.beginPath();
+          ctx.moveTo(x, margin);
+          ctx.lineTo(x, canvas.height - margin);
+          ctx.stroke();
+        }
+
+        // Horizontal grid lines
+        const numHGridLines = 10;
+        for (let i = 0; i <= numHGridLines; i++) {
+          const y = margin + (i / numHGridLines) * graphHeight;
+          ctx.beginPath();
+          ctx.moveTo(margin, y);
+          ctx.lineTo(canvas.width - margin, y);
+          ctx.stroke();
+        }
+
+        // Draw axes with enhanced styling
+        ctx.strokeStyle = "#34495e";
+        ctx.lineWidth = 3;
+
+        // X-axis (time)
+        ctx.beginPath();
+        ctx.moveTo(margin, canvas.height / 2);
+        ctx.lineTo(canvas.width - margin, canvas.height / 2);
+        ctx.stroke();
+
+        // Y-axis
+        ctx.beginPath();
+        ctx.moveTo(margin, margin);
+        ctx.lineTo(margin, canvas.height - margin);
+        ctx.stroke();
+
+        // Enhanced calibrations
+        ctx.fillStyle = "#7f8c8d";
+        ctx.font = "bold 14px Segoe UI";
+        ctx.textAlign = "center";
+
+        // Time calibrations
+        for (let t = 0; t <= timeRange; t += 2) {
+          const x = margin + (t / timeRange) * graphWidth;
+          ctx.fillText(`${t}s`, x, canvas.height - margin + 25);
+        }
+
+        // Value calibrations
+        ctx.textAlign = "right";
+        for (let i = 0; i <= 4; i++) {
+          const value = overallMax * (1 - (2 * i) / 4);
+          const y = margin + (i / 4) * graphHeight;
+          if (Math.abs(value) > 0.1) {
+            ctx.fillText(value.toFixed(1), margin - 15, y + 5);
+          }
+        }
+
+        // Draw enhanced curves with gradients
+        function drawEnhancedCurve(points, color, lineWidth = 4) {
+          ctx.strokeStyle = color;
+          ctx.lineWidth = lineWidth;
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
+          ctx.beginPath();
+
+          for (let i = 0; i < points.length; i++) {
+            const t = timePoints[i];
+            const value = points[i];
+
+            const x = margin + (t / timeRange) * graphWidth;
+            const y =
+              canvas.height / 2 - (value / overallMax) * (graphHeight / 2);
+
+            if (i === 0) {
+              ctx.moveTo(x, y);
+            } else {
+              ctx.lineTo(x, y);
+            }
+          }
+          ctx.stroke();
+        }
+
+        // Draw all curves with enhanced styling
+        drawEnhancedCurve(positionPoints, "#3498db", 4);
+        drawEnhancedCurve(velocityPoints, "#e74c3c", 4);
+        drawEnhancedCurve(accelerationPoints, "#f39c12", 4);
+
+        // Enhanced current time indicator
+        if (isAnimating) {
+          const currentX =
+            margin + ((time % timeRange) / timeRange) * graphWidth;
+
+          // Animated time line
+          const gradient = ctx.createLinearGradient(
+            0,
+            margin,
+            0,
+            canvas.height - margin
+          );
+          gradient.addColorStop(0, "rgba(231, 76, 60, 0.8)");
+          gradient.addColorStop(1, "rgba(231, 76, 60, 0.3)");
+
+          ctx.strokeStyle = gradient;
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(currentX, margin);
+          ctx.lineTo(currentX, canvas.height - margin);
+          ctx.stroke();
+
+          // Current value indicators
+          const currentSHM = calculateSHM(time);
+
+          const posY =
+            canvas.height / 2 -
+            (currentSHM.position / overallMax) * (graphHeight / 2);
+          const velY =
+            canvas.height / 2 -
+            (currentSHM.velocity / overallMax) * (graphHeight / 2);
+          const accY =
+            canvas.height / 2 -
+            (currentSHM.acceleration / overallMax) * (graphHeight / 2);
+
+          // Enhanced value dots
+          function drawValueDot(x, y, color, value, label) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, 6, 0, 2 * Math.PI);
+            ctx.fill();
+
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
+
+          drawValueDot(currentX, posY, "#3498db");
+          drawValueDot(currentX, velY, "#e74c3c");
+          drawValueDot(currentX, accY, "#f39c12");
+        }
+
+        // Enhanced axis labels
+        ctx.fillStyle = "#2c3e50";
+        ctx.font = "bold 16px Segoe UI";
+        ctx.textAlign = "center";
+        ctx.fillText("Time (seconds)", canvas.width / 2, canvas.height - 15);
+
+        ctx.save();
+        ctx.translate(20, canvas.height / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText("Amplitude", 0, 0);
+        ctx.restore();
+      }
+
+      // Enhanced spring drawing with better physics visualization
+      function drawSpring() {
+        const canvas = springCanvas;
+        const ctx = springCtx;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const centerX = canvas.width / 2;
+        const equilibriumY = canvas.height / 2;
+        const springLength = 140;
+        const massSize = 35;
+
+        // Calculate current position and motion
+        const A = parseFloat(amplitudeSlider.value);
+        const omega = parseFloat(frequencySlider.value);
+        const phi = parseFloat(phaseSlider.value);
+        const currentPos = A * Math.cos(omega * time + phi);
+        const velocity = -A * omega * Math.sin(omega * time + phi);
+        const acceleration = -A * omega * omega * Math.cos(omega * time + phi);
+
+        const pixelPos = currentPos * 60;
+        const massY = equilibriumY + pixelPos;
+        const currentSpringLength = springLength + pixelPos;
+
+        // Draw enhanced ceiling/support
+        const gradient = ctx.createLinearGradient(
+          centerX - 80,
+          15,
+          centerX + 80,
+          30
+        );
+        gradient.addColorStop(0, "#8b4513");
+        gradient.addColorStop(1, "#a0522d");
+
+        ctx.fillStyle = gradient;
+        ctx.fillRect(centerX - 80, 15, 160, 20);
+        ctx.strokeStyle = "#654321";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(centerX - 80, 15, 160, 20);
+
+        // Draw enhanced spring
+        ctx.strokeStyle = "#7f8c8d";
+        ctx.lineWidth = 4;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+
+        const springTop = 35;
+        const coils = 15;
+        const coilWidth = 30;
+
+        ctx.moveTo(centerX, springTop);
+
+        for (let i = 0; i < coils; i++) {
+          const y1 = springTop + (i / coils) * currentSpringLength;
+          const y2 = springTop + ((i + 0.5) / coils) * currentSpringLength;
+          const y3 = springTop + ((i + 1) / coils) * currentSpringLength;
+
+          const direction = i % 2 === 0 ? 1 : -1;
+          const compression = Math.max(
+            0.7,
+            Math.min(1.3, currentSpringLength / springLength)
+          );
+
+          ctx.lineTo(centerX + direction * coilWidth * compression, y2);
+          ctx.lineTo(centerX, y3);
+        }
+
+        ctx.stroke();
+
+        // Enhanced equilibrium line
+        ctx.strokeStyle = "#bdc3c7";
+        ctx.lineWidth = 2;
+        ctx.setLineDash([10, 10]);
+        ctx.beginPath();
+        ctx.moveTo(centerX - 100, equilibriumY + massSize);
+        ctx.lineTo(centerX + 100, equilibriumY + massSize);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Enhanced mass with 3D effect
+        const mass = parseFloat(massSlider.value);
+        const massColorHue = 200 + mass * 40;
+
+        // Mass shadow
+        ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+        ctx.fillRect(
+          centerX - massSize + 3,
+          massY + 3,
+          massSize * 2,
+          massSize * 2
+        );
+
+        // Mass gradient
+        const massGradient = ctx.createLinearGradient(
+          centerX - massSize,
+          massY,
+          centerX + massSize,
+          massY + massSize * 2
+        );
+        massGradient.addColorStop(0, `hsl(${massColorHue}, 70%, 60%)`);
+        massGradient.addColorStop(1, `hsl(${massColorHue}, 70%, 40%)`);
+
+        ctx.fillStyle = massGradient;
+        ctx.fillRect(centerX - massSize, massY, massSize * 2, massSize * 2);
+
+        // Mass border with highlight
+        ctx.strokeStyle = `hsl(${massColorHue}, 70%, 30%)`;
+        ctx.lineWidth = 3;
+        ctx.strokeRect(centerX - massSize, massY, massSize * 2, massSize * 2);
+
+        // Mass highlight
+        ctx.strokeStyle = `hsl(${massColorHue}, 70%, 80%)`;
+        ctx.lineWidth = 2;
+        ctx.strokeRect(
+          centerX - massSize + 2,
+          massY + 2,
+          massSize * 2 - 4,
+          massSize * 2 - 4
+        );
+
+        // Enhanced mass label with background
+        ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+        ctx.fillRect(centerX - 25, massY + massSize - 8, 50, 16);
+        ctx.strokeStyle = "#34495e";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(centerX - 25, massY + massSize - 8, 50, 16);
+
+        ctx.fillStyle = "#2c3e50";
+        ctx.font = "bold 12px Segoe UI";
+        ctx.textAlign = "center";
+        ctx.fillText(`${mass.toFixed(1)} kg`, centerX, massY + massSize + 4);
+
+        // Enhanced position indicator
+        ctx.fillStyle = "#e74c3c";
+        ctx.font = "bold 14px Segoe UI";
+        ctx.textAlign = "left";
+
+        // Position value with background
+        const posText = `x = ${currentPos.toFixed(2)} m`;
+        const posTextWidth = ctx.measureText(posText).width;
+        ctx.fillStyle = "rgba(231, 76, 60, 0.1)";
+        ctx.fillRect(centerX - 120, massY - 5, posTextWidth + 10, 20);
+
+        ctx.fillStyle = "#e74c3c";
+        ctx.fillText(posText, centerX - 115, massY + 8);
+
+        // Enhanced velocity arrow with dynamic styling
+        const arrowLength = Math.min(Math.abs(velocity) * 25, 60);
+        const arrowY = massY + massSize / 2;
+
+        if (Math.abs(velocity) > 0.05) {
+          // Arrow gradient based on velocity magnitude
+          const velIntensity = Math.min(Math.abs(velocity) / 2, 1);
+          const arrowGradient = ctx.createLinearGradient(
+            centerX + 50,
+            arrowY - arrowLength / 2,
+            centerX + 50,
+            arrowY + arrowLength / 2
+          );
+          arrowGradient.addColorStop(
+            0,
+            `rgba(231, 76, 60, ${0.3 + velIntensity * 0.7})`
+          );
+          arrowGradient.addColorStop(
+            1,
+            `rgba(192, 57, 43, ${0.5 + velIntensity * 0.5})`
+          );
+
+          ctx.strokeStyle = arrowGradient;
+          ctx.lineWidth = 4;
+          ctx.lineCap = "round";
+          ctx.beginPath();
+
+          if (velocity > 0) {
+            // Moving down
+            ctx.moveTo(centerX + 50, arrowY - arrowLength / 2);
+            ctx.lineTo(centerX + 50, arrowY + arrowLength / 2);
+            // Enhanced arrow head
+            ctx.lineTo(centerX + 42, arrowY + arrowLength / 2 - 12);
+            ctx.moveTo(centerX + 50, arrowY + arrowLength / 2);
+            ctx.lineTo(centerX + 58, arrowY + arrowLength / 2 - 12);
+          } else {
+            // Moving up
+            ctx.moveTo(centerX + 50, arrowY + arrowLength / 2);
+            ctx.lineTo(centerX + 50, arrowY - arrowLength / 2);
+            // Enhanced arrow head
+            ctx.lineTo(centerX + 42, arrowY - arrowLength / 2 + 12);
+            ctx.moveTo(centerX + 50, arrowY - arrowLength / 2);
+            ctx.lineTo(centerX + 58, arrowY - arrowLength / 2 + 12);
+          }
+          ctx.stroke();
+
+          // Velocity value with enhanced styling
+          const velText = `v = ${velocity.toFixed(2)} m/s`;
+          const velTextWidth = ctx.measureText(velText).width;
+
+          ctx.fillStyle = "rgba(231, 76, 60, 0.1)";
+          ctx.fillRect(centerX + 65, arrowY - 8, velTextWidth + 10, 16);
+
+          ctx.fillStyle = "#e74c3c";
+          ctx.font = "bold 12px Segoe UI";
+          ctx.textAlign = "left";
+          ctx.fillText(velText, centerX + 70, arrowY + 4);
+        }
+
+        // Force arrow (acceleration visualization)
+        const forceArrowLength = Math.min(Math.abs(acceleration) * 15, 50);
+        if (Math.abs(acceleration) > 0.1) {
+          ctx.strokeStyle = "#f39c12";
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+
+          const forceX = centerX - 50;
+          if (acceleration > 0) {
+            // Force downward
+            ctx.moveTo(forceX, arrowY - forceArrowLength / 2);
+            ctx.lineTo(forceX, arrowY + forceArrowLength / 2);
+            ctx.lineTo(forceX - 6, arrowY + forceArrowLength / 2 - 8);
+            ctx.moveTo(forceX, arrowY + forceArrowLength / 2);
+            ctx.lineTo(forceX + 6, arrowY + forceArrowLength / 2 - 8);
+          } else {
+            // Force upward
+            ctx.moveTo(forceX, arrowY + forceArrowLength / 2);
+            ctx.lineTo(forceX, arrowY - forceArrowLength / 2);
+            ctx.lineTo(forceX - 6, arrowY - forceArrowLength / 2 + 8);
+            ctx.moveTo(forceX, arrowY - forceArrowLength / 2);
+            ctx.lineTo(forceX + 6, arrowY - forceArrowLength / 2 + 8);
+          }
+          ctx.stroke();
+
+          // Force label
+          const forceText = `F = ${(mass * acceleration).toFixed(1)} N`;
+          ctx.fillStyle = "#f39c12";
+          ctx.font = "bold 11px Segoe UI";
+          ctx.textAlign = "right";
+          ctx.fillText(forceText, centerX - 60, arrowY + 4);
+        }
+
+        // Energy indicator
+        const kineticEnergy = 0.5 * mass * velocity * velocity;
+        const potentialEnergy =
+          0.5 *
+          mass *
+          Math.pow(parseFloat(frequencySlider.value), 2) *
+          currentPos *
+          currentPos;
+        const totalEnergy = kineticEnergy + potentialEnergy;
+
+        ctx.fillStyle = "#27ae60";
+        ctx.font = "bold 12px Segoe UI";
+        ctx.textAlign = "center";
+        ctx.fillText(
+          `E = ${totalEnergy.toFixed(2)} J`,
+          centerX,
+          canvas.height - 20
+        );
+      }
+
+      // Update all visualizations
+      function updateVisualizations() {
+        drawCombinedGraph();
+        drawSpring();
+      }
+
+      // Enhanced animation loop with smoother timing
+      function animate() {
+        if (isAnimating) {
+          time += 0.03;
+          updateVisualizations();
+          animationId = requestAnimationFrame(animate);
+        }
+      }
+
+      // Toggle animation with enhanced UI feedback
+      function toggleAnimation() {
+        const btn = document.getElementById("playBtn");
+        if (isAnimating) {
+          isAnimating = false;
+          cancelAnimationFrame(animationId);
+          btn.textContent = "Start Motion";
+          btn.style.background = "linear-gradient(135deg, #667eea, #764ba2)";
+        } else {
+          isAnimating = true;
+          animate();
+          btn.textContent = "Pause Motion";
+          btn.style.background = "linear-gradient(135deg, #e74c3c, #c0392b)";
+        }
+      }
+
+      // Reset animation with enhanced feedback
+      function resetAnimation() {
+        isAnimating = false;
+        if (animationId) cancelAnimationFrame(animationId);
+        time = 0;
+        const btn = document.getElementById("playBtn");
+        btn.textContent = "Start Motion";
+        btn.style.background = "linear-gradient(135deg, #667eea, #764ba2)";
+        updateVisualizations();
+      }
+
+      // Enhanced event listeners with debouncing
+      let updateTimeout;
+      [amplitudeSlider, frequencySlider, phaseSlider, massSlider].forEach(
+        (slider) => {
+          slider.addEventListener("input", () => {
+            clearTimeout(updateTimeout);
+            updateTimeout = setTimeout(() => {
+              updateValues();
+              updateVisualizations();
+            }, 10);
+          });
+        }
+      );
+
+      // Handle window resize with enhanced responsiveness
+      let resizeTimeout;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          resizeCanvas(combinedCanvas);
+          updateVisualizations();
+        }, 100);
+      });
+
+      // Initialize everything
+      updateValues();
+      updateVisualizations();
+
+      // Add keyboard shortcuts for better interaction
+      document.addEventListener("keydown", (e) => {
+        switch (e.code) {
+          case "Space":
+            e.preventDefault();
+            toggleAnimation();
+            break;
+          case "KeyR":
+            if (e.ctrlKey || e.metaKey) {
+              e.preventDefault();
+              resetAnimation();
+            }
+            break;
+        }
+      });
+    </script>
+  </body>
+</html>
