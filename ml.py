@@ -36,49 +36,49 @@ space_text = "   Mugisha   "   # with spaces for strip examples
 num_text = "123"               # numeric string
 mixed_text = "Mugisha123"      # letters + numbers
 
-# 1. isalpha() → checks if all characters are alphabets
-print(name.isalpha())      # True  ✅ (all letters)
-print(mixed_text.isalpha()) # False ❌ (letters + numbers)
+#isalpha() → checks if all characters are alphabets
+print(name.isalpha())      # True
+print(mixed_text.isalpha()) # False
 
-# 2. isdecimal() → checks if all characters are decimal digits (0–9)
-print(num_text.isdecimal()) # True  ✅
-print(name.isdecimal())     # False ❌ (letters only)
+#isdecimal() → checks if all characters are decimal digits
+print(num_text.isdecimal()) # True
+print(name.isdecimal())     # False
 
-# 3. isdigit() → checks if all characters are digits (includes unicode digits)
-print(num_text.isdigit())   # True  ✅
-print(name.isdigit())       # False ❌
+#isdigit() → checks if all characters are digits
+print(num_text.isdigit())   # True
+print(name.isdigit())       # False
 
-# 4. isnumeric() → checks if all characters are numeric (digits, fractions, Roman numerals, etc.)
-print(num_text.isnumeric()) # True  ✅
-print(name.isnumeric())     # False ❌
+#isnumeric() → checks if all characters are numeric (digits, fractions, Roman numerals, etc.)
+print(num_text.isnumeric()) # True
+print(name.isnumeric())     # False
 
-# 5. lower() → converts all characters to lowercase
+#lower() → converts all characters to lowercase
 print(name.lower())   # "mugisha"
 
-# 6. islower() → checks if all characters are lowercase
-print(name.lower().islower()) # True ✅
-print(name.islower())         # False ❌ (original "Mugisha" starts with capital M)
+#islower() → checks if all characters are lowercase
+print(name.lower().islower()) # True
+print(name.islower())         # False
 
-# 7. upper() → converts all characters to uppercase
+#upper() → converts all characters to uppercase
 print(name.upper())   # "MUGISHA"
 
-# 8. isupper() → checks if all characters are uppercase
-print(name.upper().isupper()) # True ✅
-print(name.isupper())         # False ❌
+#isupper() → checks if all characters are uppercase
+print(name.upper().isupper()) # True
+print(name.isupper())         # False
 
-# 9. swapcase() → swaps uppercase to lowercase and vice versa
+#swapcase() → swaps uppercase to lowercase and vice versa
 print(name.swapcase())  # "mUGISHA"
 
-# 10. isspace() → checks if string contains ONLY whitespace
-print("   ".isspace())   # True ✅
-print(name.isspace())    # False ❌
+#isspace() → checks if string contains ONLY whitespace
+print("   ".isspace())   # True
+print(name.isspace())    # False
 
-# 11. strip() → removes spaces from BOTH sides
+#strip() → removes spaces from BOTH sides
 print(space_text.strip())   # "Mugisha"
 
-# 12. lstrip() → removes spaces from the LEFT side
+#lstrip() → removes spaces from the LEFT side
 print(space_text.lstrip())  # "Mugisha   "
 
-# 13. rstrip() → removes spaces from the RIGHT side
+#rstrip() → removes spaces from the RIGHT side
 print(space_text.rstrip())  # "   Mugisha"
 
