@@ -82,5 +82,8 @@
 # #rstrip() → removes spaces from the RIGHT side
 # print(space_text.rstrip())  # "   Mugisha"
 
+x, y = 5,3
+print(x / y)
 
-bool ("me")
+
+
