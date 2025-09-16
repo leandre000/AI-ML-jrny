@@ -4,9 +4,15 @@
 #
 # print(name_upper, name_lower)
 
-def my_converter(x):
- return x * 0.3048
+# def my_converter(x):
+#  return x * 0.3048
+#
+# txt = f"A plane can be flying at {my_converter(3000)} meter altitude"
+#
+# print(txt)
 
-txt = f"A plane can be flying at {my_converter(3000)} meter altitude"
+num1 = 10
+num2 = 5
+result = f"The sum of {num1} and {num2} is {num1+num2}"
 
-print(txt)
+print(result)
