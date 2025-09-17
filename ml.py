@@ -50,6 +50,10 @@
 # fruits.clear()       # removes everything
 # print(fruits)
 
-fruits = ["apple", "banana", "cherry","kiwi","mango"]
-newlist = [x for x in fruits if "a" in x]
-print(newlist)
+# fruits = ["apple", "banana", "cherry","kiwi","mango"]
+# newlist = [x for x in fruits if "a" in x]
+# print(newlist)
+
+thislist = ["orange","mango","kiwi","pineapple","banana"]
+thislist.sort()
+print(thislist)
