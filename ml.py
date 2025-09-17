@@ -45,7 +45,11 @@
 # print(fruits)
 #
 
-fruits = ["apple", "banana", "cherry"]
+# fruits = ["apple", "banana", "cherry"]
+#
+# fruits.clear()       # removes everything
+# print(fruits)
 
-fruits.clear()       # removes everything
-print(fruits)
+numbers = [1, 2, 3, 4, 5]
+copy_numbers = [x for x in numbers]
+print(copy_numbers)
