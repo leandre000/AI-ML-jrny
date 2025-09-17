@@ -1,43 +1,29 @@
-"""
-Python List Methods Examples
-"""
 
 def append_example():
-    """
-    Example of using the `append()` method to add an element to the end of a list.
-    """
+
     names = ["Leandre", "Emma", "Liam"]
     names.append("Olivia")
-    print(names)  # Output: ['Leandre', 'Emma', 'Liam', 'Olivia']
+    print(names)
 
 def clear_example():
-    """
-    Example of using the `clear()` method to remove all elements from a list.
-    """
+
     names = ["Leandre", "Emma", "Liam"]
     names.clear()
-    print(names)  # Output: []
+    print(names)
 
 def copy_example():
-    """
-    Example of using the `copy()` method to create a new list with the same elements.
-    """
+
     names = ["Leandre", "Emma", "Liam"]
     new_names = names.copy()
-    print(new_names)  # Output: ['Leandre', 'Emma', 'Liam']
+    print(new_names)
 
 def count_example():
-    """
-    Example of using the `count()` method to count the number of occurrences of an element in a list.
-    """
     names = ["Leandre", "Emma", "Liam", "Leandre"]
     count = names.count("Leandre")
-    print(count)  # Output: 2
+    print(count)
 
 def extend_example():
-    """
-    Example of using the `extend()` method to add multiple elements to the end of a list.
-    """
+   
     names = ["Leandre", "Emma", "Liam"]
     more_names = ["Olivia", "Lucas"]
     names.extend(more_names)

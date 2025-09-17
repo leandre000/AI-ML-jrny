@@ -1,8 +1,17 @@
+#
+# thislist = ["apple", "banana", "cherry"]
+# # thislist[1] = "blackcurrant"
+# thislist[1:2] = "blackcurrant"
+#
+# print(thislist)
+#
+#
 
-thislist = ["apple", "banana", "cherry"]
-# thislist[1] = "blackcurrant"
-thislist[1:2] = "blackcurrant"
+original_list = ["Leandre", "Emma", "Liam"]
+new_list = ["Olivia", "Lucas"]
 
-print(thislist)
+# Insert the new list at index 1
+original_list[1:1] = new_list
 
+print(original_list)  # Output: ['Leandre', 'Olivia', 'Lucas', 'Emma', 'Liam']
 
