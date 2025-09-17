@@ -38,9 +38,14 @@
 # thislist.remove("banana")
 # print(thislist)
 
-fruits = ["apple", "banana", "cherry",1,2,4]
+# fruits = ["apple", "banana", "cherry",1,2,4]
+#
+# removed = fruits.pop()
+# print("Removed:", removed)
+# print(fruits)
+#
 
-removed = fruits.pop()
-print("Removed:", removed)
+fruits = ["apple", "banana", "cherry"]
+
+fruits.clear()       # removes everything
 print(fruits)
-
