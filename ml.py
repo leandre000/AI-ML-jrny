@@ -54,6 +54,19 @@
 # newlist = [x for x in fruits if "a" in x]
 # print(newlist)
 
-thislist = ["orange","mango","kiwi","pineapple","banana"]
-thislist.sort(reverse="true")
-print(thislist)
+# thislist = ["orange","mango","kiwi","pineapple","banana","indimu","amapera","peas"]
+# # thislist.sort(reverse="true")
+# # print(thislist)
+# thislist.sort(key= str.lower)
+# print(thislist)
+
+
+thislist = ["orange", "mango", "kiwi", "pineapple", "banana", "indimu", "amapera", "peas"]
+
+
+thislist.sort(key=str.lower)
+
+
+reversed_items = [item[::-1] for item in thislist]
+
+print(reversed_items)
