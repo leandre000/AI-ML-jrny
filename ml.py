@@ -7,10 +7,29 @@
 #
 #
 
-original_list = ["Leandre", "Emma", "Liam"]
-new_list = ["Olivia", "Lucas"]
+# original_list = ["Leandre", "Emma", "Liam"]
+# new_list = ["Olivia", "Lucas"]
+#
+# original_list[1:1] = new_list
+#
+# print(original_list)
 
-original_list[1:1] = new_list
 
-print(original_list)
+# thislist = ["apple","banana", "cherry"]
+# thislist.append("orange")
+# print(thislist)
 
+
+thislist = ["apple", "banana", "cherry"]
+thislist.append("orange")
+
+
+thistuple = ("kiwi", "mango")
+
+
+thislist.extend(list(thistuple))
+print(thislist)
+
+
+merged = thislist + list(thistuple)
+print(merged)
