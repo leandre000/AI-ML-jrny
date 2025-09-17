@@ -20,16 +20,21 @@
 # print(thislist)
 
 
-thislist = ["apple", "banana", "cherry"]
-thislist.append("orange")
+# thislist = ["apple", "banana", "cherry"]
+# thislist.append("orange")
+#
+#
+# thistuple = ("kiwi", "mango")
+#
+#
+# thislist.extend(list(thistuple))
+# print(thislist)
+#
+#
+# merged = thislist + list(thistuple)
+# print(merged)
 
-
-thistuple = ("kiwi", "mango")
-
-
-thislist.extend(list(thistuple))
+thislist = ["apple", "banana", "cherry", "orange", "kiwi", "mango"]
+thislist.remove("banana")
 print(thislist)
 
-
-merged = thislist + list(thistuple)
-print(merged)
