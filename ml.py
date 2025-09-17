@@ -55,5 +55,5 @@
 # print(newlist)
 
 thislist = ["orange","mango","kiwi","pineapple","banana"]
-thislist.sort()
+thislist.sort(reverse="true")
 print(thislist)
