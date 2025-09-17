@@ -33,8 +33,14 @@
 #
 # merged = thislist + list(thistuple)
 # print(merged)
+#
+# thislist = ["apple", "banana", "cherry", "orange", "kiwi", "mango"]
+# thislist.remove("banana")
+# print(thislist)
 
-thislist = ["apple", "banana", "cherry", "orange", "kiwi", "mango"]
-thislist.remove("banana")
-print(thislist)
+fruits = ["apple", "banana", "cherry"]
+
+removed = fruits.pop()   # no index given → removes last item ("cherry")
+print("Removed:", removed)
+print(fruits)
 
