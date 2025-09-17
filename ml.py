@@ -10,8 +10,7 @@
 original_list = ["Leandre", "Emma", "Liam"]
 new_list = ["Olivia", "Lucas"]
 
-# Insert the new list at index 1
 original_list[1:1] = new_list
 
-print(original_list)  # Output: ['Leandre', 'Olivia', 'Lucas', 'Emma', 'Liam']
+print(original_list)
 
