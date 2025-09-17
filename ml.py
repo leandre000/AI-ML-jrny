@@ -38,9 +38,9 @@
 # thislist.remove("banana")
 # print(thislist)
 
-fruits = ["apple", "banana", "cherry"]
+fruits = ["apple", "banana", "cherry",1,2,4]
 
-removed = fruits.pop()   # no index given → removes last item ("cherry")
+removed = fruits.pop()
 print("Removed:", removed)
 print(fruits)
 
