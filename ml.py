@@ -50,6 +50,6 @@
 # fruits.clear()       # removes everything
 # print(fruits)
 
-numbers = [1, 2, 3, 4, 5]
-copy_numbers = [x for x in numbers]
-print(copy_numbers)
+fruits = ["apple", "banana", "cherry","kiwi","mango"]
+newlist = [x for x in fruits if "a" in x]
+print(newlist)
