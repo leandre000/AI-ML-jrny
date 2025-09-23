@@ -58,6 +58,10 @@
 #
 # print(reversed_items)
 
-list = [1,3,"kiwi",None]
-list.pop(3)
-print(list)
+
+fruits = ["Apple", "Banana", "Cherry", "Date", "Elderbelly", "fig", "Grape"]
+
+fruits.sort(key=str.lower)
+reversed_list = [item[::-1] for item in fruits]
+
+print(reversed_list)
