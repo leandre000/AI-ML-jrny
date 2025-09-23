@@ -59,9 +59,15 @@
 # print(reversed_items)
 
 
-fruits = ["Apple", "Banana", "Cherry", "Date", "Elderbelly", "fig", "Grape"]
+# fruits = ["Apple", "Banana", "Cherry", "Date", "Elderbelly", "fig", "Grape"]
+#
+# fruits.sort(key=str.lower)
+# reversed_list = [item[::-1] for item in fruits]
+#
+# print(reversed_list)
 
-fruits.sort(key=str.lower)
-reversed_list = [item[::-1] for item in fruits]
 
-print(reversed_list)
+def multiply(a,b):
+    return a * b
+
+print(multiply(2,5))
