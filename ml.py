@@ -50,23 +50,14 @@
 # fruits.clear()       # removes everything
 # print(fruits)
 
-# fruits = ["apple", "banana", "cherry","kiwi","mango"]
-# newlist = [x for x in fruits if "a" in x]
-# print(newlist)
+# thislist = ["orange", "mango", "kiwi", "pineapple", "banana", "indimu", "amapera", "peas"]
+# thislist.sort(key=str.lower)
+#
+#
+# reversed_items = [item[::-1] for item in thislist]
+#
+# print(reversed_items)
 
-# thislist = ["orange","mango","kiwi","pineapple","banana","indimu","amapera","peas"]
-# # thislist.sort(reverse="true")
-# # print(thislist)
-# thislist.sort(key= str.lower)
-# print(thislist)
-
-
-thislist = ["orange", "mango", "kiwi", "pineapple", "banana", "indimu", "amapera", "peas"]
-
-
-thislist.sort(key=str.lower)
-
-
-reversed_items = [item[::-1] for item in thislist]
-
-print(reversed_items)
+list = [1,3,"kiwi",None]
+list.pop(3)
+print(list)
