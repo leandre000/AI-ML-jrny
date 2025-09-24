@@ -67,7 +67,8 @@
 # print(reversed_list)
 
 
-def multiply(a,b):
-    return a * b
+def greet(name="kellia"):
+    print(f"Hello, {name}!")
 
-print(multiply(2,5))
+greet()          # Uses default "kellia"
+greet("Alice")   # Uses provided name "Alice"
