@@ -68,7 +68,10 @@
 
 
 
-def foo(a, b, /, c, d):
-    return a + b + c + d
 
-print(foo(1, 2, d=3, c=4))
+my_list = [1, 2, 3, 4, 5]
+
+
+list_length = lambda lst: len(lst)
+
+print(list_length(my_list))
