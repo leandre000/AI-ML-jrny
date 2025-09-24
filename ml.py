@@ -69,9 +69,11 @@
 
 
 
-my_list = [1, 2, 3, 4, 5]
+# my_list = [1, 2, 3, 4, 5]
+#
+#
+# list_length = lambda lst: len(lst)
+#
+# print(list_length(my_list))
 
 
-list_length = lambda lst: len(lst)
-
-print(list_length(my_list))
