@@ -67,8 +67,8 @@
 # print(reversed_list)
 
 
-def greet(name="kellia"):
-    print(f"Hello, {name}!")
 
-greet()          # Uses default "kellia"
-greet("Alice")   # Uses provided name "Alice"
+def foo(a, b, /, c, d):
+    return a + b + c + d
+
+print(foo(1, 2, d=3, c=4))
